@@ -26,6 +26,29 @@ except ModuleNotFoundError:
         """
     )
 
+def custom_reward_function(asset_memory, risk_penalty=0.01, max_drawdown_penalty=0.01):
+    # Portfolio return calculation
+    rate_of_return = asset_memory["final"][-1] / asset_memory["final"][-2]
+    portfolio_return = rate_of_return - 1
+    max_drawdown = qs.stats.max_drawdown(pd.Series(asset_memory["final"])) #should max drawdown be calculated over a moving window?
+    drawdown_penalty = max_drawdown * max_drawdown_penalty
+    
+    # Risk-based penalty: could be volatility or other risk metrics
+    volatility = np.std(pd.Series(asset_memory["final"]))
+    risk_penalty = volatility * risk_penalty
+    
+    # Reward function with penalties
+    portfolio_reward = np.log(rate_of_return) - drawdown_penalty - risk_penalty
+    
+    return portfolio_return, portfolio_reward
+
+def sharpe_ratio_reward_function(asset_memory): # does this work
+    rate_of_return = asset_memory["final"][-1] / asset_memory["final"][-2]
+    portfolio_return = rate_of_return - 1
+    sharpe = qs.stats.sharpe(portfolio_return)
+    return portfolio_return, sharpe
+
+
 
 class PortfolioOptimizationEnv(gym.Env):
     """A portfolio allocation environment for OpenAI gym.
@@ -77,6 +100,7 @@ class PortfolioOptimizationEnv(gym.Env):
         return_last_action=False,
         normalize_df="by_previous_time",
         reward_scaling=1,
+        reward_function=None,  # Add a reward function parameter
         comission_fee_model="trf",
         comission_fee_pct=0,
         features=["close", "high", "low"],
@@ -130,6 +154,7 @@ class PortfolioOptimizationEnv(gym.Env):
         self._df = df
         self._initial_amount = initial_amount
         self._return_last_action = return_last_action
+        self._reward_function = reward_function if reward_function else self.default_reward_function
         self._reward_scaling = reward_scaling
         self._comission_fee_pct = comission_fee_pct
         self._comission_fee_model = comission_fee_model
@@ -195,7 +220,14 @@ class PortfolioOptimizationEnv(gym.Env):
 
         self._portfolio_value = self._initial_amount
         self._terminal = False
-
+    
+    def default_reward_function(self):
+        """Define the default reward function logic."""
+        rate_of_return = self._asset_memory["final"][-1] / self._asset_memory["final"][-2]
+        portfolio_return = rate_of_return - 1
+        portfolio_reward = np.log(rate_of_return)
+        return portfolio_return, portfolio_reward
+    
     def step(self, actions):
         """Performs a simulation step.
 
@@ -348,13 +380,9 @@ class PortfolioOptimizationEnv(gym.Env):
             # save date memory
             self._date_memory.append(self._info["end_time"])
 
-            # define portfolio return
-            rate_of_return = (
-                self._asset_memory["final"][-1] / self._asset_memory["final"][-2]
-            )
-            portfolio_return = rate_of_return - 1
-            portfolio_reward = np.log(rate_of_return)
-
+            # call reward function
+            portfolio_return , portfolio_reward = self._reward_function(self._asset_memory)
+            
             # save portfolio return memory
             self._portfolio_return_memory.append(portfolio_return)
             self._portfolio_reward_memory.append(portfolio_reward)
