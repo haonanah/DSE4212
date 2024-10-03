@@ -221,9 +221,9 @@ class PortfolioOptimizationEnv(gym.Env):
         self._portfolio_value = self._initial_amount
         self._terminal = False
     
-    def default_reward_function(self):
+    def default_reward_function(self, asset_memory):
         """Define the default reward function logic."""
-        rate_of_return = self._asset_memory["final"][-1] / self._asset_memory["final"][-2]
+        rate_of_return = asset_memory["final"][-1] / asset_memory["final"][-2]
         portfolio_return = rate_of_return - 1
         portfolio_reward = np.log(rate_of_return)
         return portfolio_return, portfolio_reward
