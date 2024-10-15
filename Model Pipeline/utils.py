@@ -38,7 +38,7 @@ def custom_reward_function(asset_memory, risk_penalty=0.01, max_drawdown_penalty
     risk_penalty = volatility * risk_penalty
     
     # Reward function with penalties
-    portfolio_reward = np.log(rate_of_return) - drawdown_penalty - risk_penalty
+    portfolio_reward = np.log(rate_of_return) + drawdown_penalty - risk_penalty
     
     return portfolio_return, portfolio_reward
 
