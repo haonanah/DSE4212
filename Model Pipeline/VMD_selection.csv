@@ -1,0 +1,16 @@
+,,,,,,,,,,,
+With VMD and new features,,,,,,,,,,,
+TIME_WINDOW,K_SIZE,CONV_MID,CONV_FINAL,train_portfolio_value,train_drawdown,train_sharpe,train_cumulative,test_portfolio_value,test_drawdown,test_sharpe,test_cumulative
+50,4,5,10,1853387.10,-0.39,1.32,18.53,170744.08,-0.19,1.86,1.71
+,,,,,,,,,,,
+With new features,,,,,,,,,,,
+TIME_WINDOW,K_SIZE,CONV_MID,CONV_FINAL,train_portfolio_value,train_drawdown,train_sharpe,train_cumulative,test_portfolio_value,test_drawdown,test_sharpe,test_cumulative
+50,4,5,10,735885.20,-0.39,0.93,7.36,157737.12,-0.19,1.49,1.58
+,,,,,,,,,,,
+With VMD and old features,,,,,,,,,,,
+TIME_WINDOW,K_SIZE,CONV_MID,CONV_FINAL,train_portfolio_value,train_drawdown,train_sharpe,train_cumulative,test_portfolio_value,test_drawdown,test_sharpe,test_cumulative
+50,4,5,10,700671.00,-0.39,0.92,7.01,155723.06,-0.19,1.62,1.56
+,,,,,,,,,,,
+With old features,,,,,,,,,,,
+TIME_WINDOW,K_SIZE,CONV_MID,CONV_FINAL,train_portfolio_value,train_drawdown,train_sharpe,train_cumulative,test_portfolio_value,test_drawdown,test_sharpe,test_cumulative
+50,4,5,10,474519.34,-0.37,0.90,4.75,159332.66,-0.19,1.60,1.59
