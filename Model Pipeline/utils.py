@@ -26,7 +26,7 @@ except ModuleNotFoundError:
         """
     )
 
-def custom_reward_function(asset_memory, risk_penalty=0.01, max_drawdown_penalty=0.01):
+def custom_reward_function(asset_memory, risk_penalty=0.1, max_drawdown_penalty=0.1):
     # Portfolio return calculation
     rate_of_return = asset_memory["final"][-1] / asset_memory["final"][-2]
     portfolio_return = rate_of_return - 1
@@ -38,7 +38,7 @@ def custom_reward_function(asset_memory, risk_penalty=0.01, max_drawdown_penalty
     risk_penalty = volatility * risk_penalty
     
     # Reward function with penalties
-    portfolio_reward = np.log(rate_of_return) + drawdown_penalty - risk_penalty
+    portfolio_reward = np.log( 1 + rate_of_return) + drawdown_penalty - risk_penalty
     
     return portfolio_return, portfolio_reward
 
