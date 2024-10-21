@@ -1,0 +1,2 @@
+TIME_WINDOW,K_SIZE,CONV_MID,CONV_FINAL,train_portfolio_value,train_drawdown,train_sharpe,train_cumulative,test_portfolio_value,test_drawdown,test_sharpe,test_cumulative
+50,4,5,10,1348237.0,-0.3846910246168459,1.2000551599345812,13.48237,165060.36,-0.18553567756759315,1.455697679205592,1.65060359375
