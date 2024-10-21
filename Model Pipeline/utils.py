@@ -265,10 +265,12 @@ class PortfolioOptimizationEnv(gym.Env):
                 }
             )
             metrics_df.set_index("date", inplace=True)
-
+            
+            metrics_df.to_csv(self._results_file / "metrics_data.csv")
+            
             plt.plot(metrics_df["portfolio_values"], "r")
             plt.title("Portfolio Value Over Time")
-            plt.xlabel("Time")
+            plt.xlabel("Hi")
             plt.ylabel("Portfolio value")
             plt.savefig(self._results_file / "portfolio_value.png")
             plt.close()
