@@ -319,7 +319,12 @@ class PolicyGradient:
             policy = self.train_policy
             optimizer = self.train_optimizer
 
-        obs, last_actions, price_variations, trf_mu = next(iter(dataloader))
+        try:
+            obs, last_actions, price_variations, trf_mu = next(iter(dataloader))
+        except StopIteration:
+            print("DataLoader is empty. Skipping gradient ascent step.")
+            return
+
         obs = obs.to(self.device)
         last_actions = last_actions.to(self.device)
         price_variations = price_variations.to(self.device)
@@ -328,6 +333,8 @@ class PolicyGradient:
         # Define policy loss (negative for gradient ascent)
         mu = policy.mu(obs, last_actions)
         portfolio_returns = torch.sum(mu * price_variations * trf_mu, dim=1)
+        # Prevent log(0) by adding epsilon
+        portfolio_returns = torch.clamp(portfolio_returns, min=1e-8)
         policy_loss = -torch.mean(torch.log(portfolio_returns))
 
         # Update policy network
