@@ -167,13 +167,13 @@ class PolicyGradient:
                 self.scheduler.step(validation_performance)  
 
                 if best_validation_performance is None:
-                    # First validation performance
+                    # Initialize the best validation performance on the first validation
                     best_validation_performance = validation_performance
                     episodes_without_improvement = 0
                     best_model_state = copy.deepcopy(self.train_policy.state_dict())
                     print(f"New best validation performance: {best_validation_performance}")
                 else:
-                    # Calculate relative improvement
+                    # Calculate relative improvement if best_validation_performance is set
                     relative_improvement = (validation_performance - best_validation_performance) / (abs(best_validation_performance) + 1e-8)
                     
                     if relative_improvement > threshold:
@@ -186,12 +186,15 @@ class PolicyGradient:
                         print(f"No improvement for {episodes_without_improvement} validation(s).")
                         if episodes_without_improvement >= patience:
                             print("Early stopping due to no improvement on validation set.")
-                            break 
+                            break
+
 
         # Load best model state
         if best_model_state is not None:
             self.train_policy.load_state_dict(best_model_state)
             print("Loaded best model based on validation performance.")
+
+        return best_model_state
 
     def evaluate_on_validation(self):
         """Evaluates the current policy on the validation environment."""

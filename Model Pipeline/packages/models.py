@@ -78,14 +78,14 @@ class DRLAgent:
         Returns:
             An instance of the trained model.
         """
-        model.train(
+        best_checkpoint = model.train(
             episodes=episodes,
             callback=callback,
             validation_freq=validation_freq,
             patience=patience,
             threshold=threshold
         )
-        return model
+        return model, best_checkpoint
 
     @staticmethod
     def DRL_validation(
